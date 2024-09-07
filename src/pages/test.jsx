@@ -7,6 +7,7 @@ const WebRTCAudioShare = () => {
 	const [peerId, setPeerId] = useState("");
 	const [connections, setConnections] = useState([]);
 	const [isSharing, setIsSharing] = useState(false);
+	const [audioSource, setAudioSource] = useState("microphone"); // 'microphone' or 'system'
 	const localAudioRef = useRef(null);
 	const remoteAudioRef = useRef(null);
 	const peerRef = useRef(null);
@@ -64,7 +65,16 @@ const WebRTCAudioShare = () => {
 
 	const startSharing = async () => {
 		try {
-			const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+			let stream;
+			if (audioSource === "microphone") {
+				stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+			} else {
+				stream = await navigator.mediaDevices.getDisplayMedia({
+					audio: true, // Capture system audio
+					video: false, // No need for video
+				});
+			}
+
 			localAudioRef.current.srcObject = stream;
 
 			connections.forEach((conn) => {
@@ -76,7 +86,7 @@ const WebRTCAudioShare = () => {
 
 			setIsSharing(true);
 		} catch (error) {
-			console.error("Error accessing microphone:", error);
+			console.error("Error accessing audio:", error);
 		}
 	};
 
@@ -122,6 +132,21 @@ const WebRTCAudioShare = () => {
 					<div className="my-4">
 						<QRCodeSVG value={peerId} size={200} />
 					</div>
+
+					<div className="mb-4">
+						<label className="block text-lg font-medium">
+							Choose Audio Source:
+						</label>
+						<select
+							value={audioSource}
+							onChange={(e) => setAudioSource(e.target.value)}
+							className="p-2 border rounded"
+						>
+							<option value="microphone">Microphone Audio</option>
+							<option value="system">System Audio</option>
+						</select>
+					</div>
+
 					<button
 						onClick={toggleSharing}
 						className={`px-4 py-2 rounded ${
