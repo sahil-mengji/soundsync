@@ -13,7 +13,7 @@ export default function App() {
 				<Routes>
 					<Route path="/" element={<Home />} />
 					<Route path="/host" element={<Host />} />
-					<Route path="/peer" element={<Peer />} />
+					<Route path="/peer" element={<WebRTCAudioShare />} />
 					<Route path="/test" element={<WebRTCAudioShare />} />
 				</Routes>
 			</div>
