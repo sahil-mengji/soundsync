@@ -11,6 +11,9 @@ const WebRTCAudioShare = () => {
 	const localAudioRef = useRef(null);
 	const remoteAudioRef = useRef(null);
 	const peerRef = useRef(null);
+	const canvasRef = useRef(null);
+	const audioContextRef = useRef(null);
+	const analyserRef = useRef(null);
 
 	useEffect(() => {
 		peerRef.current = new Peer();
@@ -66,16 +69,19 @@ const WebRTCAudioShare = () => {
 	const startSharing = async () => {
 		try {
 			let stream;
-			if (audioSource === "microphone") {
+			if (audioSource == "microphone") {
 				stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 			} else {
 				stream = await navigator.mediaDevices.getDisplayMedia({
 					audio: true, // Capture system audio
-					video: false, // No need for video
+					video: true, // No need for video
 				});
 			}
 
 			localAudioRef.current.srcObject = stream;
+
+			// Setup audio visualization
+			setupAudioVisualization(stream);
 
 			connections.forEach((conn) => {
 				const call = peerRef.current.call(conn.peer, stream);
@@ -110,6 +116,55 @@ const WebRTCAudioShare = () => {
 		} else {
 			startSharing();
 		}
+	};
+
+	const setupAudioVisualization = (stream) => {
+		audioContextRef.current = new (window.AudioContext ||
+			window.webkitAudioContext)();
+		const source = audioContextRef.current.createMediaStreamSource(stream);
+		analyserRef.current = audioContextRef.current.createAnalyser();
+		source.connect(analyserRef.current);
+		analyserRef.current.fftSize = 2048;
+		const bufferLength = analyserRef.current.frequencyBinCount;
+		const dataArray = new Uint8Array(bufferLength);
+
+		const canvas = canvasRef.current;
+		const canvasCtx = canvas.getContext("2d");
+
+		const draw = () => {
+			requestAnimationFrame(draw);
+
+			analyserRef.current.getByteTimeDomainData(dataArray);
+
+			canvasCtx.fillStyle = "rgb(200, 200, 200)";
+			canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
+
+			canvasCtx.lineWidth = 2;
+			canvasCtx.strokeStyle = "rgb(0, 0, 0)";
+
+			canvasCtx.beginPath();
+
+			const sliceWidth = (canvas.width * 1.0) / bufferLength;
+			let x = 0;
+
+			for (let i = 0; i < bufferLength; i++) {
+				const v = dataArray[i] / 128.0;
+				const y = (v * canvas.height) / 2;
+
+				if (i === 0) {
+					canvasCtx.moveTo(x, y);
+				} else {
+					canvasCtx.lineTo(x, y);
+				}
+
+				x += sliceWidth;
+			}
+
+			canvasCtx.lineTo(canvas.width, canvas.height / 2);
+			canvasCtx.stroke();
+		};
+
+		draw();
 	};
 
 	return (
@@ -155,7 +210,8 @@ const WebRTCAudioShare = () => {
 					>
 						{isSharing ? "Stop Sharing Audio" : "Start Sharing Audio"}
 					</button>
-					<audio ref={localAudioRef} autoPlay muted />
+					<audio ref={localAudioRef} muted />
+					<canvas ref={canvasRef} width="600" height="100" className="mt-4" />
 					<div className="mt-4">
 						<h3 className="text-lg font-semibold">Connected Devices:</h3>
 						<ul>

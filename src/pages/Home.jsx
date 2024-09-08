@@ -1,8 +1,9 @@
 import React from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 export default function Home() {
 	const navigate = useNavigate();
+	const { peerId } = useParams();
 	return (
 		<>
 			<p className="text-white text-3xl font-bold orbitron">AudioSync</p>
@@ -21,7 +22,7 @@ export default function Home() {
 					<h3 className="text-2xl font-semibold text-gray-400"> Host</h3>
 				</div>
 				<div
-					onClick={() => navigate("/peer")}
+					onClick={() => navigate(`/peer?peerId=${peerId}`)}
 					style={{ aspectRatio: 1 }}
 					className="flex-1 cursor-pointer flex justify-center flex-col bg-gray-800 hover:bg-gray-700 transition-[200ms] p-4  gap-2 items-center rounded-lg max-w-[200px]"
 				>
