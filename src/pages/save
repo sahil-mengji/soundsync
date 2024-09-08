@@ -1,0 +1,18 @@
+	<>
+			<h1 className="text-2xl font-bold mb-4">Client Audio Receiver</h1>
+
+			<input
+				type="text"
+				placeholder="Enter Host Peer ID "
+				className=" p-4 mr-2 bg-gray-700 focus:outline-none focus:border-none w-full rounded-lg"
+				value={peerId} // Keep the input value controlled
+				onChange={(e) => setPeerId(e.target.value)}
+			/>
+			<button
+				onClick={() => connectToHost(peerId)}
+				className="bg-green-500 text-white px-4 py-2 rounded mt-4"
+			>
+				Connect
+			</button>
+			<audio ref={remoteAudioRef} autoPlay controls className="opaci" />
+		</>
