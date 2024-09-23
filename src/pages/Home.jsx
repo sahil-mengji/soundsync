@@ -6,28 +6,33 @@ export default function Home() {
 	const { peerId } = useParams();
 	return (
 		<>
-			<p className="text-white text-3xl font-bold orbitron">AudioSync</p>
-			<p className="text-gray-400 text-lg font-[sans-serif]  orbitron text-center mt-4">
-				Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dignissimos
-				quisquam dolore similique vel sit doloribus officia, necessitatibus
+			<p className="text-white text-3xl font-bold orbitron w-full">
+				Select Mode
+			</p>
+			<p className="text-[#ffffffbb] text-lg  w-full  font-thin  mt-4">
+				Choose whether you want to host a session or join an existing one.
 			</p>
 
-			<div className="w-full mt-8 flex justify-evenly gap-4">
+			<div className="w-full mt-8 flex gap-4">
 				<div
 					onClick={() => navigate("/host")}
-					style={{ aspectRatio: 1 }}
-					className="flex-1 cursor-pointer flex justify-center flex-col bg-gray-800 hover:bg-gray-700 transition-[200ms] p-4 gap-2  items-center rounded-lg max-w-[200px]"
+					className=" flex-1 cursor-pointer flex justify-center flex-col bg-[#1c1c1e] hover:bg-[#323235] transition-[200ms] p-8 gap-2  items-center rounded-2xl "
 				>
-					<img src="monitor-speaker.svg" className="w-12 h-12" alt="" />
-					<h3 className="text-2xl font-semibold text-gray-400"> Host</h3>
+					<img src="monitor-speaker.svg" className="w-8 h-8" alt="" />
+					<h3 className="text-2xl font-semibold text-white"> Host Mode</h3>
+					<p className="text-sm  text-[#98989F] text-center">
+						As a host, you can share your audio with connected devices.
+					</p>
 				</div>
 				<div
 					onClick={() => navigate(`/peer?peerId=${peerId}`)}
-					style={{ aspectRatio: 1 }}
-					className="flex-1 cursor-pointer flex justify-center flex-col bg-gray-800 hover:bg-gray-700 transition-[200ms] p-4  gap-2 items-center rounded-lg max-w-[200px]"
+					className="py-8 flex-1 cursor-pointer flex justify-center flex-col bg-[#1c1c1e] hover:bg-[#323235] transition-[200ms] p-8  gap-2 items-center rounded-2xl "
 				>
-					<img src="screen-share.svg" className="w-12 h-12" alt="" />
-					<h3 className="text-2xl font-semibold text-gray-400"> Peer</h3>
+					<img src="screen-share.svg" className="w-8 h-8" alt="" />
+					<h3 className="text-2xl font-semibold text-white"> Peer Mode</h3>
+					<p className="text-sm  text-[#98989F] text-center">
+						As a peer, you can connect to a host and listen to the shared audio.
+					</p>
 				</div>
 			</div>
 		</>

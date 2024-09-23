@@ -25,27 +25,37 @@ const PeerClient = () => {
 	}, []);
 
 	const connectToHost = (hostPeerId) => {
-		const conn = peerRef.current.connect(hostPeerId);
+		const conn = peerRef.current.connect(hostPeerId.toLowerCase());
 		conn.on("error", (err) => console.error("Connection error:", err));
 	};
 
 	return (
-		<div className="p-4">
-			<h1 className="text-2xl font-bold mb-4">Client Audio Receiver</h1>
-			<input
-				type="text"
-				placeholder="Enter Host Peer ID"
-				className="border p-2 mr-2"
-				onChange={(e) => setPeerId(e.target.value)}
-			/>
-			<button
-				onClick={() => connectToHost(peerId)}
-				className="bg-green-500 text-white px-4 py-2 rounded"
-			>
-				Connect
-			</button>
-			<audio ref={remoteAudioRef} autoPlay controls />
-		</div>
+		<>
+			<p className="text-white text-3xl font-bold w-full">Peer Mode</p>
+			<p className="text-[#ffffffbb] text-lg  w-full  font-thin  mt-2 mb-4">
+				Choose whether you want to host a session or join an existing one.
+			</p>
+
+			<div className="bg-[#1c1c1e]  mt-4  p-4 flex rounded-2xl w-full flex-wrap">
+				<p className=" text-2xl flex justify-between gap-4  w-full flex-wrap items-center">
+					<input
+						type="text"
+						placeholder="Enter Host Peer ID"
+						className="border-none focus:outline-none p-2 px-4 mr-2 rounded-xl text-lg bg-[#29292c] flex-1"
+						onChange={(e) => setPeerId(e.target.value)}
+					/>
+					<button
+						onClick={() => connectToHost(peerId)}
+						className="px-4 py-2 rounded-full bg-blue-500
+						text-white text-lg"
+					>
+						Connect
+					</button>
+				</p>
+			</div>
+
+			<audio ref={remoteAudioRef} autoPlay controls className="z-[-20]" />
+		</>
 	);
 };
 

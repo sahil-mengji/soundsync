@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import Peer from "peerjs";
-
+import { Copy } from "lucide-react";
 const Host = () => {
 	const [peerId, setPeerId] = useState("");
 	const [connections, setConnections] = useState([]);
@@ -26,7 +26,6 @@ const Host = () => {
 		});
 
 		peerRef.current.on("call", (call) => {
-			// For host, we don't answer calls, instead we call clients
 			call.on("error", (err) => console.error("Call error:", err));
 		});
 
@@ -115,10 +114,10 @@ const Host = () => {
 		const draw = () => {
 			requestAnimationFrame(draw);
 			analyserRef.current.getByteTimeDomainData(dataArray);
-			canvasCtx.fillStyle = "rgb(200, 200, 200)";
+			canvasCtx.fillStyle = "#000000";
 			canvasCtx.fillRect(0, 0, canvas.width, canvas.height);
 			canvasCtx.lineWidth = 2;
-			canvasCtx.strokeStyle = "rgb(0, 0, 0)";
+			canvasCtx.strokeStyle = "#ffffff";
 			canvasCtx.beginPath();
 			const sliceWidth = (canvas.width * 1.0) / bufferLength;
 			let x = 0;
@@ -140,71 +139,146 @@ const Host = () => {
 		draw();
 	};
 	return (
-		<div className="p-4">
-			<p className="font-semibold text-2xl orbitron w-full text-center">
-				Host mode
-			</p>
-			<p className="opacity-70 mt-4 text-center text-[12px] ">
-				Select Host mode on other devices and scan the <br /> QR code or just
-				share the link to other devices
+		<>
+			<p className="text-white text-3xl font-bold w-full">Host Mode</p>
+			<p className="text-[#ffffffbb] text-lg  w-full  font-thin  mt-2 mb-4">
+				Choose whether you want to host a session or join an existing one.
 			</p>
 
-			<div
-				style={{ aspectRatio: 1 }}
-				className="rounded-lg bg-gray-800 p-4 mt-8 flex items-center justify-center max-w-[300px] mx-auto"
-			>
-				<QRCodeSVG
-					bgColor="#1f2937"
-					fgColor="#ffffff"
-					size="100%"
-					value={peerId}
-				/>
+			<div className="bg-[#1c1c1e]  mt-4  p-8 flex rounded-2xl w-full flex-wrap">
+				<p className=" text-2xl flex justify-between gap-4 w-full flex-wrap items-center">
+					<div className="text-between">PEER ID</div>
+					<div className=" text-[#ffffff9a] inco font-thin">
+						{peerId.toUpperCase()}
+					</div>
+					<div className="text-[16px] flex gap-2 items-center bg-[#29292c] px-4 p-1 rounded-full cursor-pointer">
+						<Copy size={18} />
+						Copy
+					</div>
+				</p>
 			</div>
-
-			<p className="text-center mt-4">
-				Your Peer ID: <br /> <b className="text-mono">{peerId}</b>{" "}
-			</p>
-			<div className="flex items-center  mt-2 py-2 px-4 rounded-full justify-center">
-				<button
-					className=" bg-blue-900 text-white py-2 px-6 rounded-full hover:bg-blue-950"
-					onClick={() => copyToClipboard(peerId)}
+			<div className="bg-[#1c1c1e] w-full mt-4 p-4 flex rounded-2xl">
+				<div
+					style={{ aspectRatio: 1 }}
+					className="rounded-lg  flex items-center justify-center "
 				>
-					Copy Link 🔗
-				</button>
+					<QRCodeSVG
+						bgColor="#1f2937"
+						fgColor="#ffffff"
+						size="80%"
+						value={peerId}
+					/>
+				</div>
+				<div className="p-4 flex flex-col justify-center">
+					{" "}
+					<p className="text-white text-2xl font-semibold 		 w-full">
+						Scan QR Code
+					</p>
+					<p className="text-[#ffffffbb] text-md  w-full  font-thin  mt-2">
+						Scan the QR Code using any app or select peer mode and then scan QR
+						from there
+					</p>
+					<div className="  mt-2 py-2 rounded-full ">
+						<button
+							className=" bg-[#29292c] text-white py-4 px-8 rounded-full hover:bg-[#38383b] transition-colors"
+							onClick={() => copyToClipboard(peerId)}
+						>
+							Copy Link 🔗
+						</button>
+					</div>
+				</div>
+			</div>
+			<div className="bg-[#1c1c1e] mt-4 p-8 flex rounded-2xl w-full flex-wrap justify-between">
+				<div className="flex items-center justify-center">
+					<button
+						onClick={toggleSharing}
+						className={`px-8 py-4 rounded-full ${
+							isSharing ? "bg-red-900" : "bg-blue-500"
+						} text-white`}
+					>
+						{isSharing ? "Stop Sharing Audio" : "Start Sharing Audio"}
+					</button>
+				</div>
+
+				<div className="bg-[#29292c] rounded-full">
+					{/* <label className="block text-lg font-medium">
+						Choose Audio Source
+					</label> */}
+					<div className="flex  ">
+						<label className="flex items-center">
+							<input
+								type="radio"
+								value="microphone"
+								checked={audioSource === "microphone"}
+								onChange={(e) => setAudioSource(e.target.value)}
+								className="hidden" // Hide the default radio button
+							/>
+							<div
+								className={`p-4  px-8 rounded-full bg-[#29292c] cursor-pointer transition duration-200 ${
+									audioSource === "microphone" ? "bg-[#535359]" : ""
+								}`}
+							>
+								Microphone Audio
+							</div>
+						</label>
+						<label className="flex items-center">
+							<input
+								type="radio"
+								value="system"
+								checked={audioSource === "system"}
+								onChange={(e) => setAudioSource(e.target.value)}
+								className="hidden" // Hide the default radio button
+							/>
+							<div
+								className={`p-4  px-8 rounded-full bg-[#29292c] cursor-pointer transition duration-200 ${
+									audioSource === "system" ? "bg-[#535359]" : ""
+								}`}
+							>
+								System Audio
+							</div>
+						</label>
+					</div>
+				</div>
 			</div>
 
-			<div className="mb-4">
-				<label className="block text-lg font-medium">
-					Choose Audio Source:
-				</label>
-				<select
-					value={audioSource}
-					onChange={(e) => setAudioSource(e.target.value)}
-					className="p-2 border rounded bg-slate-900"
-				>
-					<option value="microphone">Microphone Audio</option>
-					<option value="system">System Audio</option>
-				</select>
-			</div>
-			<button
-				onClick={toggleSharing}
-				className={`px-4 py-2 rounded ${
-					isSharing ? "bg-red-500" : "bg-green-500"
-				} text-white`}
-			>
-				{isSharing ? "Stop Sharing Audio" : "Start Sharing Audio"}
-			</button>
 			<audio ref={localAudioRef} muted />
 			<canvas ref={canvasRef} width="600" height="100" className="mt-4" />
 			<div className="mt-4">
-				<h3 className="text-lg font-semibold">Connected Devices:</h3>
 				<ul>
 					{connections.map((conn, index) => (
 						<li key={index}>{conn.peer}</li>
 					))}
 				</ul>
 			</div>
-		</div>
+
+			<div className="bg-[#1c1c1e]  mt-4  p-8 w-full rounded-2xl">
+				<h3 className="text-lg font-semibold">Connected Devices:</h3>{" "}
+				<div className="flex flex-col space-y-4 mt-4 w-full">
+					{connections.length != 0 ? (
+						connections.map((conn, index) => (
+							<div
+								key={index}
+								className="flex items-center space-x-4 p-4 rounded-2xl bg-[#29292c]  shadow-md"
+							>
+								{/* Random color div */}
+								<div className="w-12 h-12 rounded-full bg-blue-900 flex items-center justify-center text-white font-bold">
+									<span>R</span> {/* Replace with random color or content */}
+								</div>
+
+								{/* Name */}
+								<p className="text-xl font-medium text-white flex-grow">
+									{conn.peer}
+								</p>
+							</div>
+						))
+					) : (
+						<p className="text-white text-center flex items-center space-x-4 p-4 rounded-2xl bg-[#29292c]  shadow-md">
+							No connected devices
+						</p>
+					)}
+				</div>
+			</div>
+		</>
 	);
 };
 
