@@ -31,23 +31,24 @@ const PeerClient = () => {
 
 	return (
 		<>
-			<p className="text-white text-3xl font-bold w-full">Peer Mode</p>
-			<p className="text-[#ffffffbb] text-lg  w-full  font-thin  mt-2 mb-4">
+			<p className="text-white text-2xl sm:text-3xl font-bold w-full">
+				Peer Mode
+			</p>
+			<p className="text-[#ffffffbb] text-base sm:text-lg w-full font-thin mt-2 mb-4">
 				Choose whether you want to host a session or join an existing one.
 			</p>
 
-			<div className="bg-[#1c1c1e]  mt-4  p-4 flex rounded-2xl w-full flex-wrap">
-				<p className=" text-2xl flex justify-between gap-4  w-full flex-wrap items-center">
+			<div className="bg-[#1c1c1e] mt-4 p-4 flex flex-col sm:flex-row rounded-2xl w-full">
+				<p className="text-xl sm:text-2xl flex flex-col sm:flex-row  justify-between gap-4 w-full items-start flex-wrap">
 					<input
 						type="text"
 						placeholder="Enter Host Peer ID"
-						className="border-none focus:outline-none p-2 px-4 mr-2 rounded-xl text-lg bg-[#29292c] flex-1"
+						className="border-none focus:outline-none p-2 px-4 mb-2 sm:mb-0 rounded-xl text-base sm:text-lg bg-[#29292c] flex-1 sm:w-full"
 						onChange={(e) => setPeerId(e.target.value)}
 					/>
 					<button
 						onClick={() => connectToHost(peerId)}
-						className="px-4 py-2 rounded-full bg-blue-500
-						text-white text-lg"
+						className="px-4 py-2 rounded-full bg-blue-500 text-white text-base sm:text-lg"
 					>
 						Connect
 					</button>
