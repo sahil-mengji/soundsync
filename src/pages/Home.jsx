@@ -6,10 +6,10 @@ export default function Home() {
 	const { peerId } = useParams();
 	return (
 		<>
-			<p className="text-white text-3xl font-bold orbitron w-full">
+			<p className="text-white text-3xl font-medium grotesk w-full">
 				Select Mode
 			</p>
-			<p className="text-[#ffffffbb] text-lg  w-full  font-thin  mt-4">
+			<p className="text-[#ffffffbb] text-lg  w-full  font-thin  ">
 				Choose whether you want to host a session or join an existing one.
 			</p>
 
