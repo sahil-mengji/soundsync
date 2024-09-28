@@ -169,7 +169,7 @@ const Host = () => {
 						bgColor="#1f2937"
 						fgColor="#ffffff"
 						size="80%"
-						value={`http://192.168.28.116:5173/peer/?peerId=${peerId}`}
+						value={`https://soundsynk.netlify.app/peer/?peerId=${peerId}`}
 					/>
 				</div>
 				<div className="p-4 flex flex-col justify-center">
