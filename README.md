@@ -7,7 +7,6 @@ SoundSynk is a real-time audio sync application that allows multiple devices on 
 - **Select Mode**: Choose between hosting a session or joining as a peer.
 - **Host Mode**: Acts as the central audio source, enabling other devices to connect and sync with its audio stream.
 - **Peer Mode**: Allows devices to join an existing session and listen to the host's audio in real-time.
-- **Local Network Sync**: Operates over a local network, eliminating the need for internet connectivity.
 - **Low Latency Audio**: Utilizes WebRTC for minimal lag, providing smooth, synchronized playback across connected devices.
 
 ## Tech Stack
